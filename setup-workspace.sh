@@ -9,7 +9,7 @@ mkdir -p \$HOME/catkin_ws/src &&
 cd \$HOME/catkin_ws &&
 catkin_make &&
 echo 'Setting up .bashrc' &&
-echo 'source \$HOME/catkin_ws/devel/setup.bash' >> \$HOME/.bashrc &&
+echo 'source $""HOME/catkin_ws/devel/setup.bash' >> \$HOME/.bashrc &&
 echo 'export ROS_HOSTNAME=localhost' >> \$HOME/.bashrc &&
 echo 'export ROS_MASTER_URI=http://localhost:11311' >> \$HOME/.bashrc &&
 source \$HOME/.bashrc"
