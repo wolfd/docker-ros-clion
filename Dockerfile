@@ -11,11 +11,6 @@ RUN groupadd --system dev --gid 1000 && \
     --comment "Docker image user" dev && \
     chown -R dev:dev /home/dev
 
-# NOTE(danny): this will become outdated faster than docker swarm in 2018, so keep an eye on it
-# NOTE(danny): you should probably keep this locally as clion.tar.gz when testing
-# but make sure to comment out the tar in the .dockerignore file
-ADD https://download.jetbrains.com/cpp/CLion-2018.1.tar.gz /opt
-
 # it's a raspberry pi now (the password is raspberry)
 RUN echo "dev:raspberry" | chpasswd && adduser dev sudo
 
@@ -23,11 +18,19 @@ RUN echo "dev:raspberry" | chpasswd && adduser dev sudo
 RUN apt-get update && \
     apt-get install -y \
     build-essential autoconf automake \
-    sudo vim nano git curl \
+    sudo vim nano git curl wget \
     python-numpy python-scipy python-opencv && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
+
+# CLion version
+ENV VERSION 2018.1
+# NOTE(danny): this will become outdated faster than docker swarm in 2018, so keep an eye on it
+# NOTE(danny): you should probably keep this locally as clion.tar.gz when testing
+# but make sure to comment out the tar in the .dockerignore file
+WORKDIR /opt
+RUN curl -L https://download.jetbrains.com/cpp/CLion-$VERSION.tar.gz | tar xvz
 
 # override the ROS entrypoint
 ENTRYPOINT []
