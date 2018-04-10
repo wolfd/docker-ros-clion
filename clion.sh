@@ -23,6 +23,3 @@ docker run --env HOME=/home/dev \
     --workdir /tmp \
     --entrypoint /bin/bash \
     ${IMAGE} -c "$CLION_CMD"
-
-echo $CMD
-$CMD

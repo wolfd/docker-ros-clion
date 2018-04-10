@@ -36,4 +36,4 @@ On Mac OS you have to:
 ## License and Credits
 This project is licensed under the [Apache License Version 2.0, January 2004](http://www.apache.org/licenses/).
 
-## Forked from https://github.com/kurron/docker-clion
+Forked from https://github.com/kurron/docker-clion
