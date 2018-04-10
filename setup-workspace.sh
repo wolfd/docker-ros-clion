@@ -28,4 +28,4 @@ docker run --entrypoint "/bin/bash" \
     --volume $ROS_HOME:/home/dev \
     --volume /tmp/.X11-unix:/tmp/.X11-unix \
     --workdir /tmp \
-	wolf/clion:latest -c "$SETUP_CMD" \
+	wolf/ros-clion:latest -c "$SETUP_CMD" \

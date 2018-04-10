@@ -12,16 +12,19 @@ RUN groupadd --system dev --gid 1000 && \
     chown -R dev:dev /home/dev
 
 # NOTE(danny): this will become outdated faster than docker swarm in 2018, so keep an eye on it
+# NOTE(danny): you should probably keep this locally as clion.tar.gz when testing
+# but make sure to comment out the tar in the .dockerignore file
 ADD https://download.jetbrains.com/cpp/CLion-2018.1.tar.gz /opt
 
 # it's a raspberry pi now (the password is raspberry)
 RUN echo "dev:raspberry" | chpasswd && adduser dev sudo
 
-# Install make and compilers
+# Install make and compilers and extra stuff
 RUN apt-get update && \
     apt-get install -y \
     build-essential autoconf automake \
-    libxext6 sudo vim nano git curl && \
+    sudo vim nano git curl \
+    python-numpy python-scipy python-opencv && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*

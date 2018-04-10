@@ -2,7 +2,7 @@
 
 # Launches CLion inside a Docker container (specifically for my mac)
 
-IMAGE=${1:-wolf/clion:latest}
+IMAGE=${1:-wolf/ros-clion:latest}
 
 ROS_HOME=$HOME/ros-dev
 
