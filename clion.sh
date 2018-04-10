@@ -1,30 +1,28 @@
 #!/bin/bash
 
-# Launches CLion inside a Docker container
+# Launches CLion inside a Docker container (specifically for my mac)
 
-IMAGE=${1:-kurron/docker-clion:latest}
+IMAGE=${1:-wolf/clion:latest}
 
-DOCKER_GROUP_ID=$(cut -d: -f3 < <(getent group docker))
-USER_ID=$(id -u $(whoami))
-GROUP_ID=$(id -g $(whoami))
+ROS_HOME=$HOME/ros-dev
 
-# Need to give the container access to your windowing system
+CLION_CMD="source \$HOME/catkin_ws/devel/setup.bash && /opt/clion-2018.1/bin/clion.sh"
+
+# Need to give the container (and everyone) access to windowing system
 xhost +
 
-CMD="docker run --group-add ${DOCKER_GROUP_ID} \
-                --env HOME=/home/powerless \
-                --env DISPLAY=unix${DISPLAY} \
-                --interactive \
-                --name CLion \
-                --net "host" \
-                --rm \
-                --tty \
-                --user=${USER_ID}:${GROUP_ID} \
-                --volume $HOME:/home/powerless \
-                --volume /tmp/.X11-unix:/tmp/.X11-unix \
-                --volume /var/run/docker.sock:/var/run/docker.sock \
-                --workdir /tmp \
-                ${IMAGE}"
+docker run --env HOME=/home/dev \
+    --env DISPLAY=$(ipconfig getifaddr en0):0 \
+    --interactive \
+    --name clion \
+    --net host \
+    --rm \
+    --tty \
+    --volume $ROS_HOME:/home/dev \
+    --volume /tmp/.X11-unix:/tmp/.X11-unix \
+    --workdir /tmp \
+    --entrypoint /bin/bash \
+    ${IMAGE} -c "$CLION_CMD"
 
 echo $CMD
 $CMD

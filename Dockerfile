@@ -1,23 +1,31 @@
-FROM kurron/docker-azul-jdk-8-build:latest
+FROM osrf/ros:kinetic-desktop-full-xenial
 
-MAINTAINER Ron Kurr <kurr@kurron.org>
+# System settings
+RUN echo "fs.inotify.max_user_watches = 524288" >> /etc/sysctl.conf
+RUN sysctl -p --system
 
-ENV CL_JDK /usr/lib/jvm/zulu-8-amd64
+# Create non-root user -- many systems default to 1000 so we'll do that here to make things compatible
+RUN groupadd --system dev --gid 1000 && \
+    useradd --uid 1000 --system --gid dev \
+    --home-dir /home/dev --create-home \
+    --comment "Docker image user" dev && \
+    chown -R dev:dev /home/dev
 
-ENTRYPOINT ["/opt/clion-2017.2/bin/clion.sh"]
+# NOTE(danny): this will become outdated faster than docker swarm in 2018, so keep an eye on it
+ADD https://download.jetbrains.com/cpp/CLion-2018.1.tar.gz /opt
 
-USER root
+# it's a raspberry pi now (the password is raspberry)
+RUN echo "dev:raspberry" | chpasswd && adduser dev sudo
 
 # Install make and compilers
 RUN apt-get update && \
-    apt-get install -y build-essential autoconf automake && \
+    apt-get install -y \
+    build-essential autoconf automake \
+    libxext6 sudo vim nano git curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
 
-ADD https://download.jetbrains.com/cpp/CLion-2017.2.tar.gz /opt
-
-RUN rm -rf /opt/clion-2017.2/jre64
-
-USER powerless
-
+# override the ROS entrypoint
+ENTRYPOINT []
+USER dev
